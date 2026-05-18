@@ -3,10 +3,13 @@ package reobf.proghatches.gt.metatileentity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import gregtech.api.GregTechAPI;
 import gregtech.api.enums.Textures;
+import gregtech.api.enums.Textures.BlockIcons;
 import gregtech.api.interfaces.IIconContainer;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
@@ -25,18 +28,48 @@ public class CommunicationPortHatch extends MTEHatch {
 
     public CommunicationPortHatch(String aName, int aTier, String[] aDescription, ITexture[][][] aTextures) {
         super(aName, aTier, 0, aDescription, aTextures);
-
     }
 
     @Override
     public MetaTileEntity newMetaEntity(IGregTechTileEntity aTileEntity) {
-
         return new CommunicationPortHatch(mName, mTier, mDescriptionArray, mTextures);
     }
 
-    private static final IIconContainer textureFont = new Textures.BlockIcons.CustomIcon("icons/NeutronSensorFont");
-    private static final IIconContainer textureFont_Glow = new Textures.BlockIcons.CustomIcon(
-        "icons/NeutronSensorFont_GLOW");
+    // Textures.BlockIcons.CustomIcon was removed in GT daily #520.
+    // Replaced with anonymous IIconContainer implementations.
+    private static final IIconContainer textureFont = new IIconContainer() {
+        @Override
+        public IIcon getIcon() {
+            return BlockIcons.OVERLAY_FRONT_VACUUM_FREEZER.getIcon();
+        }
+
+        @Override
+        public IIcon getOverlayIcon() {
+            return null;
+        }
+
+        @Override
+        public ResourceLocation getTextureFile() {
+            return new ResourceLocation("proghatches", "icons/NeutronSensorFont");
+        }
+    };
+
+    private static final IIconContainer textureFont_Glow = new IIconContainer() {
+        @Override
+        public IIcon getIcon() {
+            return BlockIcons.OVERLAY_FRONT_VACUUM_FREEZER_ACTIVE.getIcon();
+        }
+
+        @Override
+        public IIcon getOverlayIcon() {
+            return null;
+        }
+
+        @Override
+        public ResourceLocation getTextureFile() {
+            return new ResourceLocation("proghatches", "icons/NeutronSensorFont_GLOW");
+        }
+    };
 
     @Override
     public ITexture[] getTexturesActive(ITexture aBaseTexture) {
@@ -72,19 +105,14 @@ public class CommunicationPortHatch extends MTEHatch {
     }
 
     public void setRS(boolean porton) {
-
         for (ForgeDirection s : ForgeDirection.values()) this.getBaseMetaTileEntity()
             .setInternalOutputRedstoneSignal(s, (byte) (porton ? 15 : 0));
-
-        ((BaseMetaTileEntity) this.getBaseMetaTileEntity()).updateNeighbours(0xff, 0xff);// set all bits to 1 to update
-                                                                                         // all 6 sides
-
+        ((BaseMetaTileEntity) this.getBaseMetaTileEntity()).updateNeighbours(0xff, 0xff);
     }
 
-										    @Override
-										    public void initDefaultModes(NBTTagCompound aNBT) {
-										        for (ForgeDirection s : ForgeDirection.values()) this.getBaseMetaTileEntity()
+    @Override
+    public void initDefaultModes(NBTTagCompound aNBT) {
+        for (ForgeDirection s : ForgeDirection.values()) this.getBaseMetaTileEntity()
             .setInternalOutputRedstoneSignal(s, (byte) 0);
     }
-
 }
