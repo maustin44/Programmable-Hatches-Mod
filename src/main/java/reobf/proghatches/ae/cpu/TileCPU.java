@@ -95,6 +95,7 @@ import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -252,7 +253,8 @@ public class TileCPU extends MTEEnhancedMultiBlockBase<TileCPU>
 	}
 
 	// Textures.BlockIcons.CustomIcon was removed in GT daily #520.
-	// Replaced with an anonymous IIconContainer that registers textures directly.
+	// Replaced with an anonymous IIconContainer using ResourceLocation as required
+	// by this version of the GT IIconContainer interface.
 	private static final IIconContainer textureFont = new IIconContainer() {
 		private IIcon icon;
 		private IIcon iconGlow;
@@ -274,8 +276,8 @@ public class TileCPU extends MTEEnhancedMultiBlockBase<TileCPU>
 		}
 
 		@Override
-		public String getTextureFile() {
-			return "icons/YOTTAHatch";
+		public ResourceLocation getTextureFile() {
+			return new ResourceLocation("proghatches", "icons/YOTTAHatch");
 		}
 	};
 
