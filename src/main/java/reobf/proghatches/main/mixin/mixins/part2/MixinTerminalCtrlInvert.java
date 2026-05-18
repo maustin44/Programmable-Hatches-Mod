@@ -19,7 +19,7 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.implementations.GuiMEMonitorable;
 import appeng.client.gui.slots.VirtualMEMonitorableSlot;
-import appeng.container.implementations.ContainerMEMonitorable;
+import appeng.container.AEBaseContainer;
 import appeng.core.AEConfig;
 import appeng.util.FluidUtils;
 import net.minecraft.client.Minecraft;
@@ -39,12 +39,14 @@ public abstract class MixinTerminalCtrlInvert extends AEBaseGui {
     public abstract void drawHoveringText(List textLines, int x, int y, FontRenderer font);
 
     /**
-     * Get the terminal host from the container rather than @Shadow-ing the field,
-     * because the 'host' field was removed from GuiMEMonitorable in GT daily #520.
+     * Get the terminal host from the container's tile entity reference.
+     * The 'host' field was removed from GuiMEMonitorable in GT daily #520,
+     * so we obtain it via AEBaseContainer.getTileEntity() instead.
      */
     private ITerminalHost getTerminalHost() {
-        if (this.inventorySlots instanceof ContainerMEMonitorable) {
-            return ((ContainerMEMonitorable) this.inventorySlots).getTargetHost();
+        if (this.inventorySlots instanceof AEBaseContainer abc) {
+            Object te = abc.getTileEntity();
+            if (te instanceof ITerminalHost th) return th;
         }
         return null;
     }
