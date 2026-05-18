@@ -93,7 +93,6 @@ import gregtech.api.util.GTStructureUtility;
 import gregtech.api.util.MultiblockTooltipBuilder;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
@@ -253,26 +252,18 @@ public class TileCPU extends MTEEnhancedMultiBlockBase<TileCPU>
 	}
 
 	// Textures.BlockIcons.CustomIcon was removed in GT daily #520.
-	// Replaced with an anonymous IIconContainer using ResourceLocation as required
-	// by this version of the GT IIconContainer interface.
+	// IIconContainer in this GT version only requires getIcon(), getOverlayIcon(),
+	// and getTextureFile() returning ResourceLocation. No registerIcons method.
 	private static final IIconContainer textureFont = new IIconContainer() {
-		private IIcon icon;
-		private IIcon iconGlow;
 
 		@Override
 		public IIcon getIcon() {
-			return icon;
+			return BlockIcons.OVERLAY_FRONT_VACUUM_FREEZER.getIcon();
 		}
 
 		@Override
 		public IIcon getOverlayIcon() {
-			return iconGlow;
-		}
-
-		@Override
-		public void registerIcons(TextureMap aTextureMap) {
-			icon = aTextureMap.registerIcon("proghatches:icons/YOTTAHatch");
-			iconGlow = aTextureMap.registerIcon("proghatches:icons/YOTTAHatch_GLOW");
+			return null;
 		}
 
 		@Override
